@@ -37,11 +37,12 @@ public class Driver {
 		if (args.length > 0) {
 		    try {
 		    	option = Integer.parseInt(args[0]);
-		    	pid = Integer.parseInt(args[1]);
-		    	pname = args[2];
-		    	age = Integer.parseInt(args[3]);
 		    	
 		    	if(option == 1 && args.length == 4){
+		    		pid = Integer.parseInt(args[1]);
+			    	pname = args[2];
+			    	age = Integer.parseInt(args[3]);
+			    	
 		    		insertPerformer1(pid, pname, age);
 		    	}
 		    	else if (option ==1 && args.length !=3 )
@@ -50,10 +51,13 @@ public class Driver {
 		    		System.exit(1);
 		    	}
 		    	else if (option == 2 && args.length == 5){
+		    		pid = Integer.parseInt(args[1]);
+			    	pname = args[2];
+			    	age = Integer.parseInt(args[3]);
 		    		did = Integer.parseInt(args[3]);
 		    		insertPerformer2(pid , pname , age, did);
 		    	}
-		    	else if (option == 3 && args.length != 5)
+		    	else if (option == 2 && args.length != 5)
 		    	{
 		    		System.out.println("Please Enter PID , PNAME,Age and DID ");
 		    		System.exit(1);
@@ -61,6 +65,9 @@ public class Driver {
 		        
 		    	else if( option == 3 )
 		    		printPerformers();
+		    	else if(option == 4)
+		    		 	System.exit(0);
+		    	
 		    } catch (NumberFormatException e) {
 		        System.err.println("Arguments 1, 3, and 4 must be integers.");
 		        System.exit(1);
@@ -76,7 +83,7 @@ public class Driver {
 		} catch(SQLException e){
 			System.err.println("Exception occurred while closing Connection.");
 		}
-		inputScanner.close();		
+		
 	}
 	
 	public static boolean insertPerformer1(int pid, String pname, int age){
