@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class Driver {
 	private static Connection conn;
 	private static Statement stmt;
+	private static Scanner inputScanner;
 
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
@@ -15,21 +16,25 @@ public class Driver {
 			System.exit(1);
 		}
 		
-		//Prompt User for Action 
-		System.out.println("Please Enter Option");
-		Scanner inputScanner = new Scanner(System.in); 
-		int input = inputScanner.nextInt(); 
-		
 		// Step 2. Create an Oracle JDBC Connection. 
 		try {
-			conn = DriverManager.getConnection(sourceURL,"jabr5892", "JExh5Hd5");  
+			conn = DriverManager.getConnection(sourceURL,"neld9968", "EPxu5Cz0");  
 			System.out.println("Success!");
 			// Step 3. Creating a JDBC Statement object
 			stmt = conn.createStatement();
 			
+			//Prompt User for Action 
+			inputScanner = new Scanner(System.in); 
+			System.out.println("Please Enter Option");
+			int option = inputScanner.nextInt(); 
+			
 			//Here is where we execute statements 
-			if(input == 1) {
-				insertPerformer1();
+			switch(option) {
+				case 1:
+					insertPerformer1();
+					break;
+				case 4:
+					System.exit(0);
 			}
 			
 			conn.close();
