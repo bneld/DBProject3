@@ -10,6 +10,10 @@ public class Driver {
 		// Step 1. Loading a database driver 
 		String sourceURL = "jdbc:oracle:thin:@//oracle.cs.ou.edu:1521/pdborcl.cs.ou.edu";
 		int option;
+		int pid;
+		String pname;
+		int age;
+		int did;
 		
 		try {
 			Class.forName("oracle.jdbc.OracleDriver"); 
@@ -25,32 +29,28 @@ public class Driver {
 			// Step 3. Creating a JDBC Statement object
 			stmt = conn.createStatement();
 			
-			//Prompt User for Action 
 			//Load command line args
 			if (args.length > 0) {
 			    try {
-			        option = Integer.parseInt(args[0]);
+			    	pid = Integer.parseInt(args[0]);
+			    	pname = args[1];
+			    	age = Integer.parseInt(args[2]);
+			    	
+			    	if(args.length == 3){
+			    		insertPerformer1(pid, pname, age);
+			    	}
+			    	else if (args.length >= 4){
+			    		did = Integer.parseInt(args[3]);
+			    		insertPerformer2();
+			    	}
+			        
 			    } catch (NumberFormatException e) {
-			        System.err.println("Argument" + args[0] + " must be an integer.");
+			        System.err.println("Arguments 1, 3, and 4 must be integers.");
 			        System.exit(1);
 			    }
 			} else {
 				System.out.println("No arguments specified.");
-				option = 4;
-			}
-			
-			inputScanner = new Scanner(System.in); 
-			System.out.println("Please Enter Option");
-			option = inputScanner.nextInt(); 
-			
-			//Here is where we execute statements 
-			switch(option) {
-				case 1:
-					insertPerformer1();
-					break;
-				case 4:
-					System.exit(0);
-					break;
+				System.exit(0);
 			}
 			
 			conn.close();
@@ -61,8 +61,7 @@ public class Driver {
 		}		
 	}
 	
-	//public static boolean insertPerformer1(int pid, String pname, int years_of_experience, int age){
-	public static boolean insertPerformer1(){
+	public static boolean insertPerformer1(int pid, String pname, int age){
 
 //		String sqlInsert = "insert into performer values(" 
 //				+ pid 
