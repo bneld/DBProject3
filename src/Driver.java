@@ -45,7 +45,7 @@ public class Driver {
 			    	
 		    		insertPerformer1(pid, pname, age);
 		    	}
-		    	else if (option ==1 && args.length !=3 )
+		    	else if (option ==1 && args.length !=4 )
 		    	{
 		    		System.out.println("Please Enter PID , PNAME and Age");
 		    		System.exit(1);
