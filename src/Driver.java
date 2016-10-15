@@ -21,43 +21,47 @@ public class Driver {
 			System.exit(1);
 		}
 		
-		// Step 2. Create an Oracle JDBC Connection. 
 		try {
+			// Step 2. Create an Oracle JDBC Connection. 
 			conn = DriverManager.getConnection(sourceURL,"neld9968", "EPxu5Cz0");  
-			System.out.println("Success!");
+
 			// Step 3. Creating a JDBC Statement object
 			stmt = conn.createStatement();
+		} catch(SQLException e) {
+			System.out.println ("Exception message: " + e.getMessage());
+			System.out.println ("Exception occurred in connecting to DB.");
+		}
 			
-			//Load command line args
-			if (args.length > 0) {
-			    try {
-			    	pid = Integer.parseInt(args[0]);
-			    	pname = args[1];
-			    	age = Integer.parseInt(args[2]);
-			    	
-			    	if(args.length == 3){
-			    		insertPerformer1(pid, pname, age);
-			    	}
-			    	else if (args.length >= 4){
-			    		did = Integer.parseInt(args[3]);
-			    		//insertPerformer2();
-			    	}
-			        
-			    } catch (NumberFormatException e) {
-			        System.err.println("Arguments 1, 3, and 4 must be integers.");
-			        System.exit(1);
-			    }
-			} else {
-				System.out.println("No arguments specified.");
-				System.exit(0);
-			}
+		//Load command line args
+		if (args.length > 0) {
+		    try {
+		    	pid = Integer.parseInt(args[0]);
+		    	pname = args[1];
+		    	age = Integer.parseInt(args[2]);
+		    	
+		    	if(args.length == 3){
+		    		insertPerformer1(pid, pname, age);
+		    	}
+		    	else if (args.length >= 4){
+		    		did = Integer.parseInt(args[3]);
+		    		//insertPerformer2();
+		    	}
+		        
+		    } catch (NumberFormatException e) {
+		        System.err.println("Arguments 1, 3, and 4 must be integers.");
+		        System.exit(1);
+		    }
+		} else {
+			System.out.println("No arguments specified.");
+			System.exit(0);
+		}
 			
+		try {
 			conn.close();
-			inputScanner.close();
-		} catch(Exception e) {
-			System.out.println (e.getMessage());
-			System.out.println ("Exception occurred in executing the statement");
-		}		
+		} catch(SQLException e){
+			System.err.println("Exception occurred while closing Connection.");
+		}
+		inputScanner.close();		
 	}
 	
 	public static boolean insertPerformer1(int pid, String pname, int age){
@@ -74,7 +78,6 @@ public class Driver {
 		try {
 			ResultSet result = stmt.executeQuery(experienceSql);
 			while(result.next()) {
-				System.out.println(result.getString(1)); 
 				try {
 					totalYears += Integer.parseInt(result.getString(1));
 					counter++;
@@ -89,11 +92,10 @@ public class Driver {
 		} 
 		
 		if(counter == 0){
-				years_of_experience = (age - 18 >= 0) ? age - 18 : 0;
+			years_of_experience = (age - 18 >= 0) ? age - 18 : 0;
 		} else {
 			years_of_experience = (int) totalYears / counter;
 		}	
-		System.out.println("years of experience: " + years_of_experience);
 		
 		String sqlInsert = "insert into performer values(" 
 				+ pid 
@@ -106,10 +108,20 @@ public class Driver {
 				+ ")";
 		
 		try {
-			stmt.executeUpdate(sqlInsert);
+			//stmt.executeUpdate(sqlInsert);
+			stmt.executeQuery("select * from performer");
+			printPerformers();
+		} catch(SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+			return false;
+		} 
+		return true;
+	}
+	public static void printPerformers(){
+		try {
 			ResultSet result = stmt.executeQuery("select * from performer");
+			System.out.println("PID Name Experience Age");
 			while(result.next()) {
-				System.out.println("PID Name Experience Age");
 				System.out.println(result.getString(1)
 						+ " " + result.getString(2)
 						+ " " + result.getString(3)
@@ -118,7 +130,6 @@ public class Driver {
 		} catch(SQLException ex) {
 			System.err.println("SQLException: " + ex.getMessage());
 		} 
-		return true;
 	}
 
 }
