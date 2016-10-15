@@ -9,6 +9,8 @@ public class Driver {
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
 		String sourceURL = "jdbc:oracle:thin:@//oracle.cs.ou.edu:1521/pdborcl.cs.ou.edu";
+		int option;
+		
 		try {
 			Class.forName("oracle.jdbc.OracleDriver"); 
 		} catch(Exception x) {
@@ -24,9 +26,22 @@ public class Driver {
 			stmt = conn.createStatement();
 			
 			//Prompt User for Action 
+			//Load command line args
+			if (args.length > 0) {
+			    try {
+			        option = Integer.parseInt(args[0]);
+			    } catch (NumberFormatException e) {
+			        System.err.println("Argument" + args[0] + " must be an integer.");
+			        System.exit(1);
+			    }
+			} else {
+				System.out.println("No arguments specified.");
+				option = 4;
+			}
+			
 			inputScanner = new Scanner(System.in); 
 			System.out.println("Please Enter Option");
-			int option = inputScanner.nextInt(); 
+			option = inputScanner.nextInt(); 
 			
 			//Here is where we execute statements 
 			switch(option) {
@@ -35,15 +50,15 @@ public class Driver {
 					break;
 				case 4:
 					System.exit(0);
+					break;
 			}
 			
 			conn.close();
+			inputScanner.close();
 		} catch(Exception e) {
 			System.out.println (e.getMessage());
 			System.out.println ("Exception occurred in executing the statement");
-		}
-		inputScanner.close();
-		
+		}		
 	}
 	
 	//public static boolean insertPerformer1(int pid, String pname, int years_of_experience, int age){
