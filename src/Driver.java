@@ -9,6 +9,7 @@ public class Driver {
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
 		String sourceURL = "jdbc:oracle:thin:@//oracle.cs.ou.edu:1521/pdborcl.cs.ou.edu";
+		int option ; 
 		int pid;
 		String pname;
 		int age;
@@ -35,18 +36,31 @@ public class Driver {
 		//Load command line args
 		if (args.length > 0) {
 		    try {
-		    	pid = Integer.parseInt(args[0]);
-		    	pname = args[1];
-		    	age = Integer.parseInt(args[2]);
+		    	option = Integer.parseInt(args[0]);
+		    	pid = Integer.parseInt(args[1]);
+		    	pname = args[2];
+		    	age = Integer.parseInt(args[3]);
 		    	
-		    	if(args.length == 3){
+		    	if(option == 1 && args.length == 4){
 		    		insertPerformer1(pid, pname, age);
 		    	}
-		    	else if (args.length >= 4){
+		    	else if (option ==1 && args.length !=3 )
+		    	{
+		    		System.out.println("Please Enter PID , PNAME and Age");
+		    		System.exit(1);
+		    	}
+		    	else if (option == 2 && args.length == 5){
 		    		did = Integer.parseInt(args[3]);
-		    		//insertPerformer2();
+		    		insertPerformer2(pid , pname , age, did);
+		    	}
+		    	else if (option == 3 && args.length != 5)
+		    	{
+		    		System.out.println("Please Enter PID , PNAME,Age and DID ");
+		    		System.exit(1);
 		    	}
 		        
+		    	else if( option == 3 )
+		    		printPerformers();
 		    } catch (NumberFormatException e) {
 		        System.err.println("Arguments 1, 3, and 4 must be integers.");
 		        System.exit(1);
@@ -197,4 +211,5 @@ public class Driver {
 		
 		
 	}
+
 }
