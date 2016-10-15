@@ -1,8 +1,9 @@
 import java.sql.*;
 import java.util.Scanner;
 
-
 public class Driver {
+	Connection conn;
+	Statement stmt;
 
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
@@ -22,14 +23,14 @@ public class Driver {
 		// Step 2. Creating an Oracle JDBC Connection.  The following example assumes // that the login name is smith1234 and the password is johnsmith  
 		try
 			{
-			Connection conn = DriverManager.getConnection(sourceURL,"jabr5892", "JExh5Hd5");  
+			conn = DriverManager.getConnection(sourceURL,"jabr5892", "JExh5Hd5");  
 			System.out.println("Success!");
 			// Step 3. Creating a JDBC Statement object
-			Statement stmt = conn.createStatement();
+			stmt = conn.createStatement();
 			
 			//Here is where we execute statements 
 			if(input == 1)
-				System.out.println("User Selected First Option");
+				insertPerformer1();
 				
 			
 			
@@ -44,6 +45,9 @@ public class Driver {
 	
 		
 		
+		
+	}
+	public boolean insertPerformer1(int pid, String pname, int years_of_experience, int age){
 		
 	}
 
