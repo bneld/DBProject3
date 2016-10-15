@@ -9,7 +9,7 @@ public class Driver {
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
 		String sourceURL = "jdbc:oracle:thin:@//oracle.cs.ou.edu:1521/pdborcl.cs.ou.edu";
-		int option ; 
+		int option; 
 		int pid;
 		String pname;
 		int age;
@@ -69,14 +69,12 @@ public class Driver {
 			System.out.println("No arguments specified.");
 			System.exit(0);
 		}
-
 			
 		try {
 			conn.close();
 		} catch(SQLException e){
 			System.err.println("Exception occurred while closing Connection.");
-		}
-		inputScanner.close();		
+		}	
 	}
 	
 	public static boolean insertPerformer1(int pid, String pname, int age){
@@ -123,9 +121,7 @@ public class Driver {
 				+ ")";
 		
 		try {
-			//stmt.executeUpdate(sqlInsert);
-			stmt.executeQuery("select * from performer");
-			printPerformers();
+			stmt.executeUpdate(sqlInsert);
 		} catch(SQLException ex) {
 			System.err.println("SQLException: " + ex.getMessage());
 			return false;
