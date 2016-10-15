@@ -36,12 +36,13 @@ public class Driver {
 			    	pname = args[1];
 			    	age = Integer.parseInt(args[2]);
 			    	
+			    	
 			    	if(args.length == 3){
 			    		insertPerformer1(pid, pname, age);
 			    	}
 			    	else if (args.length >= 4){
 			    		did = Integer.parseInt(args[3]);
-			    		insertPerformer2();
+			    		insertPerformer2(pid, pname , age, did );
 			    	}
 			        
 			    } catch (NumberFormatException e) {
@@ -88,4 +89,22 @@ public class Driver {
 		return true;
 	}
 
+	
+	public static void insertPerformer2(int pid, String name, int age , int did) 
+	{ 
+		System.out.println(pid +" " + name +" " + age +" "+ did);
+		
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("ERROR in statement");
+		} 
+		
+		//find average age of  all performers who have acted in a movie that was directed by a director with a given did
+	
+		//find all these performers 
+		
+		
+	}
 }
