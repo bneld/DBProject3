@@ -1,10 +1,8 @@
 import java.sql.*;
-import java.util.Scanner;
 
 public class Driver {
 	private static Connection conn;
 	private static Statement stmt;
-	private static Scanner inputScanner;
 
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
@@ -37,95 +35,64 @@ public class Driver {
 		if (args.length > 0) {
 		    try {
 		    	option = Integer.parseInt(args[0]);
-		    	pid = Integer.parseInt(args[1]);
-		    	pname = args[2];
-		    	age = Integer.parseInt(args[3]);
 		    	
-		    	if(option == 1 && args.length == 4){
-		    		insertPerformer1(pid, pname, age);
+		    	if(option == 1) {
+		    		if(args.length == 4) {
+			    		pid = Integer.parseInt(args[1]);
+				    	pname = args[2];
+				    	age = Integer.parseInt(args[3]);
+			    		insertPerformer1(pid, pname, age);	
+		    		} else {
+		    			System.out.println("Please Enter PID , PNAME and Age");
+		    			System.exit(1);
+		    		}
 		    	}
-		    	else if (option ==1 && args.length !=3 )
-		    	{
-		    		System.out.println("Please Enter PID , PNAME and Age");
-		    		System.exit(1);
-		    	}
-		    	else if (option == 2 && args.length == 5){
-		    		did = Integer.parseInt(args[3]);
-		    		insertPerformer2(pid , pname , age, did);
-		    	}
-		    	else if (option == 3 && args.length != 5)
-		    	{
-		    		System.out.println("Please Enter PID , PNAME,Age and DID ");
-		    		System.exit(1);
-		    	}
-		        
-		    	else if( option == 3 )
-		    		printPerformers();
+		    	else if (option == 2) {
+		    		if(args.length == 5) {
+			    		pid = Integer.parseInt(args[1]);
+				    	pname = args[2];
+				    	age = Integer.parseInt(args[3]);
+			    		did = Integer.parseInt(args[3]);
+			    		insertPerformer2(pid , pname , age, did);
+		    		} else {
+		    			System.out.println("Please Enter PID , PNAME,Age and DID ");
+		    			System.exit(1);
+		    		}
+		    	}	        
+		    	else if( option == 3 ) printPerformers();
+		    	else if(option == 4) System.exit(0);
+		    	
 		    } catch (NumberFormatException e) {
-		        System.err.println("Arguments 1, 3, and 4 must be integers.");
+		        System.err.println("Arguments 1, 2, 4, and 5 must be integers.");
 		        System.exit(1);
 		    }
+		    try {
+				conn.close();
+			} catch(SQLException e){
+				System.err.println("Exception occurred while closing Connection.");
+			}	
 		} else {
 			System.out.println("No arguments specified.");
 			System.exit(0);
 		}
-			
-		try {
-			conn.close();
-		} catch(SQLException e){
-			System.err.println("Exception occurred while closing Connection.");
-		}	
+
 	}
 	
 	public static boolean insertPerformer1(int pid, String pname, int age){
 		
-		int lower = (age - 10 >= 0) ? age - 10 : 0;
-		int upper = age + 10;
-		int counter = 0;
-		int totalYears = 0;
-		int years_of_experience;
-		String experienceSql = "select years_of_experience from performer where age between "
-				+ lower + "and " + upper;
-		
-		//find years of experience of performers <= 10 years younger or older
 		try {
-			ResultSet result = stmt.executeQuery(experienceSql);
-			while(result.next()) {
-				try {
-					totalYears += Integer.parseInt(result.getString(1));
-					counter++;
-				} catch(NumberFormatException e) {
-					System.err.println("Uh oh, that wasn't a number!");
-			        System.exit(1); 
-				}
-			}
-		} catch(SQLException ex) {
-			System.err.println("SQLException: " + ex.getMessage());
-			System.exit(1);
-		} 
-		
-		if(counter == 0){
-			years_of_experience = (age - 18 >= 0) ? age - 18 : 0;
-		} else {
-			years_of_experience = (int) totalYears / counter;
-		}	
-		
-		String sqlInsert = "insert into performer values(" 
-				+ pid 
-				+ ", '"
-				+ pname
-				+ "', "
-				+ years_of_experience
-				+ ", "
-				+ age
-				+ ")";
-		
-		try {
-			stmt.executeUpdate(sqlInsert);
-		} catch(SQLException ex) {
-			System.err.println("SQLException: " + ex.getMessage());
+			CallableStatement cStmt = conn.prepareCall("{? = call FUNCTION1(?, ?, ?)}");
+			cStmt.registerOutParameter(1, Types.INTEGER);
+			cStmt.setInt(2, pid);
+			cStmt.setString(3, pname);
+			cStmt.setInt(4, age);
+			cStmt.execute();
+			System.out.println("Performer inserted.");
+
+		} catch (SQLException e){
+			System.err.println(e.getMessage());
 			return false;
-		} 
+		}
 		return true;
 	}
 	public static void printPerformers(){
