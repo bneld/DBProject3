@@ -87,7 +87,7 @@ public class Driver {
 			cStmt.setString(3, pname);
 			cStmt.setInt(4, age);
 			cStmt.execute();
-			System.out.println("Performer inserted.");
+			System.out.println("Performer inserted 1");
 
 		} catch (SQLException e){
 			System.err.println(e.getMessage());
@@ -110,69 +110,24 @@ public class Driver {
 		} 
 	}
 
-	
-	public static void insertPerformer2(int pid, String pname, int age , int did) 
-	{ 
-		System.out.println(pid +" " + pname +" " + age +" "+ did);
-		
-		int years_of_experience = 0; 
-		//find average age of  all performers who have acted in a movie that was directed by a director with a given did
-	
-		//find all these performers 
-		
-		String peformersQuery = "SELECT DISTINCT pname, years_of_experience FROM performer,acted WHERE performer.pid  =acted.pid AND mname IN (SELECT mname FROM movie, director WHERE movie.did = director.did AND director.did = 2)";
+	public static void insertPerformer2(int pid, String pname , int age , int did)
+	{
 		try {
-			ResultSet performers = stmt.executeQuery(peformersQuery);
+			CallableStatement cStmt = conn.prepareCall("{? = call FUNCTION2(?, ?, ?, ?)}");
+			cStmt.registerOutParameter(1, Types.INTEGER);
+			cStmt.setInt(2, pid);
+			cStmt.setString(3, pname);
+			cStmt.setInt(4, age);
+			cStmt.setInt(5, did);
+			cStmt.execute();
+			System.out.println("Performer inserted 2");
 			
-			int numberOfPerformers = 0 ; 
-			int sumOfYears = 0; 
-			while(performers.next())
-			{
-				System.out.println(performers.getString(1) + "   " + performers.getString(2));
-				numberOfPerformers++; 
-				sumOfYears += Integer.parseInt(performers.getString(2));
-			}
-			
-			if(numberOfPerformers == 0) 
-			{
-				years_of_experience =  age - 18; 
-				
-				if(years_of_experience < 0)
-						years_of_experience = 0 ;
-			}
-			else { 
-				int average_years =  sumOfYears / numberOfPerformers; 
-				if(average_years > age )
-					years_of_experience = age;
-				else 
-					years_of_experience = average_years;  
-				
-				
-			}
-			
-			//Insert to table 
-			
-			System.out.println("years of experience: " + years_of_experience);
-			
-			String sqlInsert = "insert into performer values(" 
-					+ pid 
-					+ ", '"
-					+ pname
-					+ "', "
-					+ years_of_experience
-					+ ", "
-					+ age
-					+ ")";
-			
-			stmt.executeQuery(sqlInsert);
 			
 			
 		} catch (SQLException e) {
-			System.out.println("SQL EXCEPTION : " + e.getMessage());
-			System.exit(1);
+			System.err.println("SQL EXPECPTION ON INSERT2: " + e.getMessage());
 		}
-		
-		
 	}
+
 
 }
