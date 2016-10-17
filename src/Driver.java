@@ -7,11 +7,8 @@ public class Driver {
 	public static void main(String[] args) {
 		// Step 1. Loading a database driver 
 		String sourceURL = "jdbc:oracle:thin:@//oracle.cs.ou.edu:1521/pdborcl.cs.ou.edu";
-		int option; 
-		int pid;
+		int option, pid, age, did; 
 		String pname;
-		int age;
-		int did;
 		
 		try {
 			Class.forName("oracle.jdbc.OracleDriver"); 
@@ -36,6 +33,8 @@ public class Driver {
 		    try {
 		    	option = Integer.parseInt(args[0]);
 		    	
+		    	/*option 1 inserts performer and estimates years of experience
+		    	by average years of experience of performers +- 10 or less years in age. */
 		    	if(option == 1) {
 		    		if(args.length == 4) {
 			    		pid = Integer.parseInt(args[1]);
@@ -47,6 +46,9 @@ public class Driver {
 		    			System.exit(1);
 		    		}
 		    	}
+		    	/* option 2 inserts performer and estimates years of experience 
+		    	by average years of experience of performers who have acted
+		    	in movies by a given director */
 		    	else if (option == 2) {
 		    		if(args.length == 5) {
 			    		pid = Integer.parseInt(args[1]);
@@ -58,8 +60,10 @@ public class Driver {
 		    			System.out.println("Please Enter PID , PNAME,Age and DID ");
 		    			System.exit(1);
 		    		}
-		    	}	        
+		    	}	  
+		    	//option 3 is print all performers
 		    	else if( option == 3 ) printPerformers();
+		    	//option 4 is exit
 		    	else if(option == 4) System.exit(0);
 		    	
 		    } catch (NumberFormatException e) {
@@ -80,6 +84,7 @@ public class Driver {
 	
 	public static boolean insertPerformer1(int pid, String pname, int age){
 		
+		//call the PL/SQL function
 		try {
 			CallableStatement cStmt = conn.prepareCall("{? = call FUNCTION1(?, ?, ?)}");
 			cStmt.registerOutParameter(1, Types.INTEGER);
@@ -96,6 +101,8 @@ public class Driver {
 		return true;
 	}
 	public static void printPerformers(){
+		
+		//prints all performers
 		try {
 			ResultSet result = stmt.executeQuery("select * from performer");
 			System.out.println("PID Name Experience Age");
@@ -112,6 +119,7 @@ public class Driver {
 
 	public static void insertPerformer2(int pid, String pname , int age , int did)
 	{
+		//calls PL/SQL function
 		try {
 			CallableStatement cStmt = conn.prepareCall("{? = call FUNCTION2(?, ?, ?, ?)}");
 			cStmt.registerOutParameter(1, Types.INTEGER);
@@ -120,10 +128,7 @@ public class Driver {
 			cStmt.setInt(4, age);
 			cStmt.setInt(5, did);
 			cStmt.execute();
-			System.out.println("Performer inserted 2");
-			
-			
-			
+			System.out.println("Performer inserted 2");			
 		} catch (SQLException e) {
 			System.err.println("SQL EXPECPTION ON INSERT2: " + e.getMessage());
 		}
